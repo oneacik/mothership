@@ -5,6 +5,9 @@
       <module name="library" target="21" />
       <module name="library.main" target="21" />
       <module name="library.test" target="21" />
+      <module name="mothership.application.ledger" target="21" />
+      <module name="mothership.application.ledger.main" target="21" />
+      <module name="mothership.application.ledger.test" target="21" />
       <module name="mothership.google.google" target="21" />
       <module name="mothership.google.google.main" target="21" />
       <module name="mothership.google.google.test" target="21" />
