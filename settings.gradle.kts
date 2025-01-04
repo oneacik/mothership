@@ -6,3 +6,5 @@
  */
 
 rootProject.name = "mothership"
+include("library:google")
+// findProject(":google:google")?.name = "google"
