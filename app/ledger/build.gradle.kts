@@ -1,18 +1,21 @@
 plugins {
-    id("java")
+    kotlin("jvm") version "2.0.20"
 }
 
 group = "com.ksidelta"
+version = "unspecified"
 
 repositories {
     mavenCentral()
 }
 
 dependencies {
-    testImplementation(platform("org.junit:junit-bom:5.10.0"))
-    testImplementation("org.junit.jupiter:junit-jupiter")
+    testImplementation(kotlin("test"))
 }
 
 tasks.test {
     useJUnitPlatform()
+}
+kotlin {
+    jvmToolchain(21)
 }
