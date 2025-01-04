@@ -1,10 +1,57 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="GradleMigrationSettings" migrationVersion="1" />
   <component name="GradleSettings">
     <option name="linkedExternalProjectsSettings">
       <GradleProjectSettings>
+        <option name="distributionType" value="LOCAL" />
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
         <option name="gradleJvm" value="#JAVA_HOME" />
+        <option name="modules">
+          <set>
+            <option value="$PROJECT_DIR$" />
+            <option value="$PROJECT_DIR$/app" />
+            <option value="$PROJECT_DIR$/app/ledger" />
+            <option value="$PROJECT_DIR$/library" />
+            <option value="$PROJECT_DIR$/library/banking" />
+            <option value="$PROJECT_DIR$/library/cache" />
+            <option value="$PROJECT_DIR$/library/google" />
+            <option value="$PROJECT_DIR$/library/http-client" />
+            <option value="$PROJECT_DIR$/library/logger" />
+            <option value="$PROJECT_DIR$/library/memoize" />
+            <option value="$PROJECT_DIR$/library/mt940" />
+            <option value="$PROJECT_DIR$/library/serialization" />
+            <option value="$PROJECT_DIR$/library/session" />
+            <option value="$PROJECT_DIR$/library/store" />
+            <option value="$PROJECT_DIR$/library/table" />
+            <option value="$PROJECT_DIR$/library/utils" />
+          </set>
+        </option>
+      </GradleProjectSettings>
+      <GradleProjectSettings>
+        <option name="distributionType" value="LOCAL" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$/library" />
+        <option name="gradleJvm" value="#JAVA_HOME" />
+        <option name="modules">
+          <set>
+            <option value="$PROJECT_DIR$" />
+            <option value="$PROJECT_DIR$/app" />
+            <option value="$PROJECT_DIR$/app/ledger" />
+            <option value="$PROJECT_DIR$/library" />
+            <option value="$PROJECT_DIR$/library/banking" />
+            <option value="$PROJECT_DIR$/library/cache" />
+            <option value="$PROJECT_DIR$/library/google" />
+            <option value="$PROJECT_DIR$/library/http-client" />
+            <option value="$PROJECT_DIR$/library/logger" />
+            <option value="$PROJECT_DIR$/library/memoize" />
+            <option value="$PROJECT_DIR$/library/mt940" />
+            <option value="$PROJECT_DIR$/library/serialization" />
+            <option value="$PROJECT_DIR$/library/session" />
+            <option value="$PROJECT_DIR$/library/store" />
+            <option value="$PROJECT_DIR$/library/table" />
+            <option value="$PROJECT_DIR$/library/utils" />
+          </set>
+        </option>
       </GradleProjectSettings>
     </option>
   </component>
