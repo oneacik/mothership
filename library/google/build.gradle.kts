@@ -3,7 +3,6 @@ plugins {
 }
 
 group = "com.ksidelta"
-version = "unspecified"
 
 repositories {
     mavenCentral()
