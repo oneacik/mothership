@@ -8,3 +8,13 @@
 subprojects {
     tasks.register("prepareKotlinBuildScriptModel")
 }
+
+allprojects {
+    repositories {
+        mavenCentral()
+    }
+}
+
+ext {
+    set("ktor.version", "3.0.3")
+}

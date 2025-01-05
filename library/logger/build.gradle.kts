@@ -1,15 +1,13 @@
 plugins {
     kotlin("jvm") version "2.0.20"
+    `java-library`
 }
 
 group = "com.ksidelta"
-version = "unspecified"
 
 dependencies {
-    implementation(project(":library:utils"))
-    implementation(project(":library:logger"))
-    implementation(project(":library:http-client"))
-
+    implementation("org.slf4j:slf4j-api:2.0.16")
+    implementation("org.slf4j:slf4j-simple:2.0.16")
     testImplementation(kotlin("test"))
 }
 

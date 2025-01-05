@@ -10,4 +10,8 @@ plugins {
 
 rootProject.name = "mothership"
 include(":library:google")
+include(":library:utils")
+include(":library:http-client")
+include(":library:logger")
+
 include(":app:ledger")
