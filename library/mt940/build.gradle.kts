@@ -6,6 +6,7 @@ plugins {
 group = "com.ksidelta"
 
 dependencies {
+    implementation(project(":library:banking"))
     testImplementation(kotlin("test"))
 }
 

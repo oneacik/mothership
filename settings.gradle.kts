@@ -12,6 +12,13 @@ rootProject.name = "mothership"
 include(":library:google")
 include(":library:utils")
 include(":library:http-client")
+
 include(":library:logger")
+include(":library:serialization")
+include(":library:mt940")
+include(":library:store")
+include(":library:memoize")
+include(":library:banking")
+include(":library:table")
 
 include(":app:ledger")

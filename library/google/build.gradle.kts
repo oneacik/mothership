@@ -8,6 +8,7 @@ version = "unspecified"
 dependencies {
     implementation(project(":library:utils"))
     implementation(project(":library:logger"))
+    implementation(project(":library:store"))
     implementation(project(":library:http-client"))
 
     testImplementation(kotlin("test"))

@@ -7,6 +7,13 @@ group = "com.ksidelta"
 dependencies {
     implementation(project(":library:google"))
     implementation(project(":library:http-client"))
+    implementation(project(":library:store"))
+    implementation(project(":library:serialization"))
+    implementation(project(":library:banking"))
+    implementation(project(":library:mt940"))
+    implementation(project(":library:memoize"))
+    implementation(project(":library:logger"))
+    implementation(project(":library:table"))
 
     implementation("io.ktor:ktor-server-core:3.0.3")
     implementation("io.ktor:ktor-server-netty:3.0.3")

@@ -15,7 +15,6 @@ class OAuthService(val configuration: Configuration, val client: HttpClient) {
     }
 
     fun handleReturn(code: String) =
-
         configuration
             .run { OAuthUrls.requestToken(code, clientId, clientSecret, redirectUrl) }
             .let { client.post(it, TokenResponse::class.java) }

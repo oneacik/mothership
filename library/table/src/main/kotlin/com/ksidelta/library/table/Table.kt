@@ -1,12 +1,41 @@
-package com.ksidelta.library.http
+package com.ksidelta.library.table
 
-import java.net.URLEncoder
+data class Table(val cells: List<Cell>) {
 
-object Table {
-    fun queryUrl(base: String, parameters: Map<String, String>): String =
-        base + "?" + parameters.entries.stream()
-            .map { entry -> entry.key + "=" + URLEncoder.encode(entry.value, "UTF-8") }
-            .reduce { l, r -> l + "&" + r }
-            .orElse("")
+    fun render(renderer: Renderer): String {
+        val xs = cells.map { it.x }.toNames().reversed()
+        val ys = cells.map { it.y }.toNames()
+        val cells = cells.map {
+            Pair(
+                Renderer.XY(it.x.name, it.y.name),
+                it.content
+            )
+        }.toMap()
+
+        val headerValues = (xs.map {
+            Pair(
+                Renderer.XY(it, "HEADER"),
+                it
+            )
+        } + ys.map {
+            Pair(
+                Renderer.XY("HEADER", it),
+                it
+            )
+        }).toMap()
+
+        return renderer.render(listOf("HEADER") + xs, listOf("HEADER") + ys, headerValues + cells)
+    }
+
+
+    data class Cell(val x: Pos, val y: Pos, val content: String)
+    data class Pos(val name: String, val order: Int = 0)
+
+    fun List<Pos>.toNames(): List<String> =
+        this
+            .sortedWith(compareBy({ it.order }, { it.name }))
+            .map { it.name }
+            .distinct()
+
 
 }

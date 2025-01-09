@@ -6,6 +6,8 @@ plugins {
 group = "com.ksidelta"
 
 dependencies {
+    implementation(project(":library:store"))
+
     testImplementation(kotlin("test"))
 }
 

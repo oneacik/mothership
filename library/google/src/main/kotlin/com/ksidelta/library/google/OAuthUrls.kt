@@ -31,7 +31,7 @@ object OAuthUrls {
 
                 "client_id" to clientId,
 
-                "scope" to "openid email profile",
+                "scope" to "openid email profile https://www.googleapis.com/auth/drive",
                 "redirect_uri" to redirectUrl,
             )
         )

@@ -1,4 +1,8 @@
 package com.ksidelta.library.mt940
 
-class ModelExt {
-}
+import com.ksidelta.library.banking.Model
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+
+
+

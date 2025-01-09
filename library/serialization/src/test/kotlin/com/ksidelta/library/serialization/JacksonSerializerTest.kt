@@ -1,21 +1,22 @@
 package com.ksidelta.library.serialization
 
-import com.fasterxml.jackson.core.JsonFactory
-import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.databind.jsontype.impl.LaissezFaireSubTypeValidator
+import kotlin.test.Test
+import kotlin.test.assertEquals
 
-class JacksonSerializerTest : Serializer {
-    val jsonFactory = JsonFactory
-        .builder()
-        .build()
+class JacksonSerializerTest {
+    val jacksonSerializer: Serializer = JacksonSerializer()
 
-    val objectMapper = ObjectMapper(jsonFactory).apply {
-        ObjectMapper.setPolymorphicTypeValidator = LaissezFaireSubTypeValidator()
+    @Test
+    fun encodeAndDecodeWorks() {
+        val entity = Base(Cringe("xD"))
+
+        val returned = entity
+            .let { jacksonSerializer.encode(it) }
+            .let { jacksonSerializer.decode(it, Base::class.java) }
+
+        assertEquals(entity, returned)
     }
 
-    override fun encode(obj: Any): String =
-        objectMapper.writeValueAsString(obj)
-    
-    override fun <T> decode(obj: String, klass: Class<T>): T =
-        objectMapper.readValue<T>(obj, klass)
+    data class Base(val obj: Any)
+    data class Cringe(val text: String)
 }

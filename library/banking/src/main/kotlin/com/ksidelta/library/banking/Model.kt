@@ -1,9 +1,7 @@
-package com.ksidelta.library.mt940
+package com.ksidelta.library.banking
 
 import java.math.BigDecimal
-import java.time.Instant
 import java.time.LocalDate
-import java.time.format.DateTimeFormatter
 import java.util.SortedSet
 
 data class Model(
@@ -18,23 +16,6 @@ data class Model(
     )
 
     companion object {
-        val LONG_DATE = DateTimeFormatter.ofPattern("yyMMdd")
-
-        fun createFromState(state: ModelParser.State): Model =
-            state.let { (it.entries + it.current.toListIfExists()) }
-                .map { model ->
-                    model.run {
-                        Entry(
-                            LocalDate.parse(date!!, LONG_DATE),
-                            account,
-                            sender,
-                            title!!,
-                            amount!!
-                        )
-                    }
-                }
-                .let { createFromList(it) }
-
         fun createFromList(list: List<Entry>) =
             list.toSortedSet { a, b ->
                 compareValuesBy(

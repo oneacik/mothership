@@ -13,9 +13,15 @@
             <option value="$PROJECT_DIR$/app" />
             <option value="$PROJECT_DIR$/app/ledger" />
             <option value="$PROJECT_DIR$/library" />
+            <option value="$PROJECT_DIR$/library/banking" />
             <option value="$PROJECT_DIR$/library/google" />
             <option value="$PROJECT_DIR$/library/http-client" />
             <option value="$PROJECT_DIR$/library/logger" />
+            <option value="$PROJECT_DIR$/library/memoize" />
+            <option value="$PROJECT_DIR$/library/mt940" />
+            <option value="$PROJECT_DIR$/library/serialization" />
+            <option value="$PROJECT_DIR$/library/store" />
+            <option value="$PROJECT_DIR$/library/table" />
             <option value="$PROJECT_DIR$/library/utils" />
           </set>
         </option>
@@ -30,9 +36,15 @@
             <option value="$PROJECT_DIR$/app" />
             <option value="$PROJECT_DIR$/app/ledger" />
             <option value="$PROJECT_DIR$/library" />
+            <option value="$PROJECT_DIR$/library/banking" />
             <option value="$PROJECT_DIR$/library/google" />
             <option value="$PROJECT_DIR$/library/http-client" />
             <option value="$PROJECT_DIR$/library/logger" />
+            <option value="$PROJECT_DIR$/library/memoize" />
+            <option value="$PROJECT_DIR$/library/mt940" />
+            <option value="$PROJECT_DIR$/library/serialization" />
+            <option value="$PROJECT_DIR$/library/store" />
+            <option value="$PROJECT_DIR$/library/table" />
             <option value="$PROJECT_DIR$/library/utils" />
           </set>
         </option>
