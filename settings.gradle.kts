@@ -20,5 +20,7 @@ include(":library:store")
 include(":library:memoize")
 include(":library:banking")
 include(":library:table")
+include(":library:session")
+include(":library:cache")
 
 include(":app:ledger")

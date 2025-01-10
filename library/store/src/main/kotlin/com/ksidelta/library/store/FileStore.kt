@@ -21,9 +21,14 @@ class FileStore(val folderPath: String, val serializer: Serializer = JacksonSeri
             ?.readText()
             ?.let { serializer.decode(it, klass) }
 
+    override fun remove(id: String) {
+        Path.of(folderPath, id).toFile().delete()
+    }
+
     override fun keys(): List<String> =
         File(folderPath)
             .listFiles()!!
+            .filter { it.isFile }
             .map { it.name }
             .sorted()
 }

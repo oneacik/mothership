@@ -3,10 +3,17 @@ import java.math.BigDecimal
 import java.time.LocalDate
 import java.time.temporal.ChronoField
 
-fun transformModel(model: Model, since: LocalDate = LocalDate.now().minusYears(1)) =
+fun transformModel(
+    model: Model,
+    keywords: List<String>? = listOf("SKŁADKA", "OPŁATY", "PRZELEW"),
+    since: LocalDate = LocalDate.now().minusYears(1).with(ChronoField.DAY_OF_MONTH, 1)
+) =
     model.entries
         .filter { it.date > since }
         .filter { it.amount > BigDecimal.ZERO }
+        .filter { entry ->
+            keywords == null || keywords.find { keyword -> entry.title.contains(keyword, true) } != null
+        }
         .map { it.copy(date = it.date.with(ChronoField.DAY_OF_MONTH, 1)) }
         .map { it.copy(sender = it.sender.findFullNameOrDie()) } //
         .sumSameDate()

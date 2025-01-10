@@ -1,6 +1,4 @@
-package com.ksidelta.library.http
-
-import java.net.URLEncoder
+package com.ksidelta.library.memoize
 
 interface Memoize {
     fun <T : Any> execute(key: String, klass: Class<T>, run: () -> T): T

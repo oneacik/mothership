@@ -14,6 +14,8 @@ dependencies {
     implementation(project(":library:memoize"))
     implementation(project(":library:logger"))
     implementation(project(":library:table"))
+    implementation(project(":library:session"))
+    implementation(project(":library:cache"))
 
     implementation("io.ktor:ktor-server-core:3.0.3")
     implementation("io.ktor:ktor-server-netty:3.0.3")

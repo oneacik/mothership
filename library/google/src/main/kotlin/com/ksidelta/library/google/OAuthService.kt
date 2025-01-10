@@ -1,32 +1,65 @@
 package com.ksidelta.library.google
 
-import com.ksidelta.library.http.HttpClient
 import com.ksidelta.library.logger.Logger
+import com.ksidelta.library.store.Store
+import java.time.Instant
+import java.time.temporal.ChronoUnit
 
-class OAuthService(val configuration: Configuration, val client: HttpClient) {
+open class OAuthService(val configuration: Configuration, val oAuthClient: OAuthClient) {
     val logger = Logger(OAuthService::class.java)
-    fun initiate(redirect: (String) -> Unit) {
+    fun initiate(redirect: (String) -> Unit, originalUrl: String) {
         redirect(
-            OAuthUrls.token(
+            OAuthUrls.authorize(
                 configuration.clientId,
-                configuration.redirectUrl
+                configuration.redirectUrl,
+                originalUrl
             )
         )
     }
 
-    fun handleReturn(code: String) =
-        configuration
-            .run { OAuthUrls.requestToken(code, clientId, clientSecret, redirectUrl) }
-            .let { client.post(it, TokenResponse::class.java) }
-            .apply { logger.log(access_token) }
+    fun handleReturn(parameters: Map<String, List<String>>, redirect: (String) -> Unit): StoredToken {
+        val code = parameters["code"]?.joinToString() ?: throw IllegalStateException("No Code in return")
+        val state = parameters["state"]?.joinToString() ?: throw IllegalStateException("No Code in return")
+        val returnTo = state.replace("redirectTo:", "")
 
+        return oAuthClient.requestToken(configuration, code)
+            .run {
+                StoredToken(
+                    accessToken = access_token,
+                    refreshToken = refresh_token,
+                    expiration = Instant.now().plus(expires_in.toLong(), ChronoUnit.SECONDS)
+                )
+            }
+            .apply { logger.log(accessToken) }
+            .also { redirect(returnTo) }
+    }
 
-    data class TokenResponse(
-        val access_token: String,
-        val expires_in: Int,
-        val id_token: String,
-        val scope: String,
-        val token_type: String,
-        val refresh_token: String?
-    )
+    fun ensureFresh(
+        storedToken: StoredToken?,
+        redirect: (String) -> Unit,
+        originalUrl: String
+    ): StoredToken? =
+        storedToken
+            ?.also { token ->
+                if (token.expiration.fresh())
+                    return token
+            }
+            ?.let { if (storedToken.refreshToken == null) null else it }
+            ?.let { token ->
+                oAuthClient.refreshToken(configuration, token.refreshToken!!)
+                    .run {
+                        storedToken.copy(
+                            accessToken = access_token,
+                            expiration = Instant.now().plus(expires_in.toLong(), ChronoUnit.SECONDS)
+                        )
+                    }
+            } ?: initiate(redirect, originalUrl).let { null }
+
+    data class StoredToken(
+        val accessToken: String,
+        val refreshToken: String?,
+        val expiration: Instant
+    ) {}
 }
+
+fun Instant.fresh() = this > Instant.now()

@@ -1,17 +1,17 @@
 package com.ksidelta.library.google
 
 import com.ksidelta.library.http.HttpClient
-import com.ksidelta.library.http.UrlBuilder
+import com.ksidelta.library.utils.UrlBuilder
 
 class DriveClient(val httpClient: HttpClient) {
-    fun listFiles(token: String): List<DriveFileListDTO> =
+    fun listFiles(token: String, criteria: Criteria): List<DriveFileListDTO> =
         generateSequence<DriveFileListDTO>(
-            queryFiles(token, null),
+            queryFiles(token, criteria, null),
         ) { files ->
-            files.nextPageToken?.let { queryFiles(token, it) }
+            files.nextPageToken?.let { queryFiles(token, criteria, it) }
         }.toList()
 
-    private fun queryFiles(token: String, pageToken: String?) =
+    private fun queryFiles(token: String, criteria: Criteria, pageToken: String?) =
         httpClient.get(
             UrlBuilder.queryUrl(
                 "https://www.googleapis.com/drive/v3/files", mapOf(
@@ -19,7 +19,9 @@ class DriveClient(val httpClient: HttpClient) {
                     "includeItemsFromAllDrives" to "true",
                     "supportsAllDrives" to "true",
                     "access_token" to token,
-                ) + (pageToken?.let { mapOf("pageToken" to it) } ?: mapOf())
+                )
+                        + (criteria.contains?.let { mapOf("q" to """name contains "$it" """) } ?: mapOf())
+                        + (pageToken?.let { mapOf("pageToken" to it) } ?: mapOf())
             ), DriveFileListDTO::class.java
         )
 
@@ -46,6 +48,10 @@ class DriveClient(val httpClient: HttpClient) {
         val id: String,
         val driveId: String?,
         val teamDriveId: String?,
+    )
+
+    data class Criteria(
+        val contains: String?
     )
 }
 

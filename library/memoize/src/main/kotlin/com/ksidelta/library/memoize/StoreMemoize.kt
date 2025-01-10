@@ -1,4 +1,4 @@
-package com.ksidelta.library.http
+package com.ksidelta.library.memoize
 
 import com.ksidelta.library.store.Store
 

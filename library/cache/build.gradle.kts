@@ -1,17 +1,13 @@
 plugins {
     kotlin("jvm") version "2.0.20"
+    `java-library`
 }
 
 group = "com.ksidelta"
-version = "unspecified"
 
 dependencies {
-    implementation(project(":library:utils"))
-    implementation(project(":library:logger"))
+    implementation(project(":library:serialization"))
     implementation(project(":library:store"))
-    implementation(project(":library:session"))
-    implementation(project(":library:http-client"))
-
     testImplementation(kotlin("test"))
 }
 
