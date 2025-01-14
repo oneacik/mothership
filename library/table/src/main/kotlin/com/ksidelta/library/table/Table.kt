@@ -7,7 +7,7 @@ data class Table(val cells: List<Cell>) {
         val ys = cells.map { it.y }.toNames()
         val cells = cells.map {
             Pair(
-                Renderer.XY(it.x.name, it.y.name),
+                Renderer.XY(it.x.toString(), it.y.toString()),
                 it.content
             )
         }.toMap()
@@ -28,13 +28,19 @@ data class Table(val cells: List<Cell>) {
     }
 
 
-    data class Cell(val x: Pos, val y: Pos, val content: String)
-    data class Pos(val name: String, val order: Int = 0)
+    data class Cell(val x: Comparable<Any>, val y: Comparable<Any>, val content: String)
+    data class Pos(val order: Int = 0, val name: String) : Comparable<Any> {
+        override fun toString(): String = name
+        override fun compareTo(other: Any): Int =
+            compareValuesBy(this, other, { (it as Pos).order }, { (it as Pos).name })
 
-    fun List<Pos>.toNames(): List<String> =
+
+    }
+
+    fun List<Comparable<Any>>.toNames(): List<String> =
         this
-            .sortedWith(compareBy({ it.order }, { it.name }))
-            .map { it.name }
+            .sorted()
+            .map { it.toString() }
             .distinct()
 
 

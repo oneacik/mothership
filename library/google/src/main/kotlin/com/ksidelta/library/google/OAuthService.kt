@@ -7,7 +7,7 @@ import java.time.temporal.ChronoUnit
 
 open class OAuthService(val configuration: Configuration, val oAuthClient: OAuthClient) {
     val logger = Logger(OAuthService::class.java)
-    fun initiate(redirect: (String) -> Unit, originalUrl: String) {
+    fun initiate(redirect: (String) -> Unit, originalUrl: String, offline: Boolean = false) {
         redirect(
             OAuthUrls.authorize(
                 configuration.clientId,
@@ -19,7 +19,7 @@ open class OAuthService(val configuration: Configuration, val oAuthClient: OAuth
 
     fun handleReturn(parameters: Map<String, List<String>>, redirect: (String) -> Unit): StoredToken {
         val code = parameters["code"]?.joinToString() ?: throw IllegalStateException("No Code in return")
-        val state = parameters["state"]?.joinToString() ?: throw IllegalStateException("No Code in return")
+        val state = parameters["state"]?.joinToString() ?: throw IllegalStateException("No State in return")
         val returnTo = state.replace("redirectTo:", "")
 
         return oAuthClient.requestToken(configuration, code)
@@ -37,9 +37,11 @@ open class OAuthService(val configuration: Configuration, val oAuthClient: OAuth
     fun ensureFresh(
         storedToken: StoredToken?,
         redirect: (String) -> Unit,
-        originalUrl: String
+        originalUrl: String,
+        offline: Boolean = false
     ): StoredToken? =
         storedToken
+            ?.let { if (storedToken.refreshToken == null && offline) null else it }
             ?.also { token ->
                 if (token.expiration.fresh())
                     return token
@@ -53,7 +55,7 @@ open class OAuthService(val configuration: Configuration, val oAuthClient: OAuth
                             expiration = Instant.now().plus(expires_in.toLong(), ChronoUnit.SECONDS)
                         )
                     }
-            } ?: initiate(redirect, originalUrl).let { null }
+            } ?: initiate(redirect, originalUrl, offline).let { null }
 
     data class StoredToken(
         val accessToken: String,

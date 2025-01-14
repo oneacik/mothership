@@ -13,21 +13,21 @@ data class Model(
         val sender: String?,
         val title: String,
         val amount: BigDecimal
-    )
+    ) : Comparable<Entry> {
+        override fun compareTo(other: Entry): Int =
+            compareValuesBy(
+                this, other,
+                { it.date },
+                { it.account },
+                { it.amount },
+                { it.title }
+            )
+    }
 
     companion object {
         fun createFromList(list: List<Entry>) =
-            list.toSortedSet { a, b ->
-                compareValuesBy(
-                    a,
-                    b,
-                    { it.date },
-                    { it.account },
-                    { it.amount },
-                    { it.title })
-            }
+            list.toSortedSet()
                 .let { Model(it) }
-
     }
 
 }

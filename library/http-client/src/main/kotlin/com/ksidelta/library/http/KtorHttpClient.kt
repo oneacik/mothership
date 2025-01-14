@@ -38,7 +38,7 @@ class KtorHttpClient : HttpClient {
     override fun <T : Any> post(url: String, klass: Class<T>, configure: (DTO) -> DTO): T =
         runBlocking {
             client.post(url) {
-               configure(DTO()).headers.entries.forEach { header ->
+                configure(DTO()).headers.entries.forEach { header ->
                     this.headers.append(header.key, header.value)
                 }
             }.handleResponse(klass)

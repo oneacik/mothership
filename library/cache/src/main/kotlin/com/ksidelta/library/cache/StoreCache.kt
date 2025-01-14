@@ -10,7 +10,8 @@ class StoreCache(val store: Store, val secondsFresh: Int) : Cache {
     init {
         Executors.newSingleThreadScheduledExecutor().scheduleWithFixedDelay(
             {
-                refresh()
+                runCatching { refresh() }
+                    .onFailure { it.printStackTrace() }
             },
             0,
             1, TimeUnit.MINUTES
@@ -19,7 +20,14 @@ class StoreCache(val store: Store, val secondsFresh: Int) : Cache {
 
     fun refresh() {
         keys()
-            .map { id -> if (get(id, TimeHasCome::class.java)?.until?.isFresh() == false) remove(id) }
+            .forEach() { id ->
+                runCatching {
+                    if (store.get(id, TimeHasCome::class.java)?.until?.isFresh() == false)
+                        remove(id)
+                }.onFailure { println("KURWAAA: DLA ${id} ::: ${it.toString()}")
+                }
+
+            }
     }
 
     override fun store(id: String, obj: Any) =
@@ -43,7 +51,7 @@ class StoreCache(val store: Store, val secondsFresh: Int) : Cache {
 
     fun freeze(value: Any) = TimeHasCome(keepFresh(secondsFresh), value)
 
-    data class TimeHasCome<T>(val until: Instant, val value: T)
+    data class TimeHasCome<Any>(val until: Instant, val value: Any)
 
     fun keepFresh(forSeconds: Int) = Instant.now().plus(forSeconds.toLong(), ChronoUnit.SECONDS)
 

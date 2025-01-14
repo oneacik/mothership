@@ -6,7 +6,19 @@ import com.ksidelta.library.utils.UrlBuilder
 class OAuthClient(val client: HttpClient) {
     fun requestToken(configuration: Configuration, code: String) =
         code
-            .let { code -> configuration.run { OAuthUrls.requestToken(code, clientId, clientSecret, redirectUrl) } }
+            .let { code ->
+                configuration.run {
+                    UrlBuilder.queryUrl(
+                        "https://oauth2.googleapis.com/token", mapOf(
+                            "code" to code,
+                            "client_id" to clientId,
+                            "client_secret" to clientSecret,
+                            "redirect_uri" to redirectUrl,
+                            "grant_type" to "authorization_code"
+                        )
+                    )
+                }
+            }
             .let { client.post(it, TokenResponse::class.java) }
 
     fun refreshToken(configuration: Configuration, refreshToken: String) =

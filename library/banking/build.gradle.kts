@@ -15,3 +15,7 @@ tasks.test {
 kotlin {
     jvmToolchain(21)
 }
+
+tasks.wrapper {
+    distributionType = Wrapper.DistributionType.ALL
+}
