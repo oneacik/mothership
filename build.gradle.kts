@@ -5,6 +5,10 @@
  * Learn more about Gradle by exploring our Samples at https://docs.gradle.org/8.10/samples
  */
 
+plugins {
+    kotlin("jvm") version "2.0.20"
+}
+
 subprojects {
     tasks.register("prepareKotlinBuildScriptModel")
 }
@@ -17,4 +21,8 @@ allprojects {
 
 ext {
     set("ktor.version", "3.0.3")
+}
+
+kotlin {
+    jvmToolchain(21)
 }

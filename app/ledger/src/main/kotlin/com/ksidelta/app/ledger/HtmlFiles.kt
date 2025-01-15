@@ -1,3 +1,5 @@
+package com.ksidelta.app.ledger
+
 import io.ktor.utils.io.charsets.Charset
 
 object HtmlFiles {

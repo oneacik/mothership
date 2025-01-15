@@ -12,10 +12,3 @@ dependencies {
 tasks.test {
     useJUnitPlatform()
 }
-kotlin {
-    jvmToolchain(21)
-}
-
-tasks.wrapper {
-    distributionType = Wrapper.DistributionType.ALL
-}

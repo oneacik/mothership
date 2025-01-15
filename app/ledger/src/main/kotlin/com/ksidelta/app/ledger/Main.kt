@@ -1,3 +1,5 @@
+package com.ksidelta.app.ledger
+
 import com.ksidelta.library.google.Configuration
 import com.ksidelta.library.google.OAuthClient
 import com.ksidelta.library.google.OAuthService
@@ -24,9 +26,9 @@ object Main {
     val oAuthService = OAuthService(
         Configuration(
             clientId = System.getenv("MOTHERSHIP_GOOGLE_CLIENT_ID")
-                ?: throw IllegalStateException("CO JEST KURWA"),
+                ?: throw IllegalStateException("GDZIE JEST MOTHERSHIP_GOOGLE_CLIENT_ID"),
             clientSecret = System.getenv("MOTHERSHIP_GOOGLE_CLIENT_SECRET")
-                ?: throw IllegalStateException("CO JEST KURWA"),
+                ?: throw IllegalStateException("GDZIE JEST MOTHERSHIP_GOOGLE_CLIENT_SECRET"),
             redirectUrl = "http://localhost:8080/oauth/handle"
         ),
         OAuthClient(KtorHttpClient())

@@ -1,3 +1,5 @@
+package com.ksidelta.app.ledger
+
 import com.ksidelta.library.banking.Model
 import com.ksidelta.library.banking.mergeModels
 import com.ksidelta.library.cache.Cache

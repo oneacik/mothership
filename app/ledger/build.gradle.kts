@@ -1,8 +1,18 @@
 plugins {
     kotlin("jvm") version "2.0.20"
+    id("com.github.johnrengelman.shadow") version "8.1.1"
 }
 
 group = "com.ksidelta"
+
+
+tasks.jar {
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    manifest {
+        attributes(mapOf("Main-Class" to "com.ksidelta.app.ledger.Main"))
+    }
+    from(configurations.runtimeClasspath.get().map { it })
+}
 
 dependencies {
     implementation(project(":library:google"))
