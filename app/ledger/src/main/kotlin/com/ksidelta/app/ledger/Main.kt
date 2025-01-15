@@ -38,7 +38,7 @@ object Main {
     val profileService: ProfileService = ProfileService(ProfileClient(KtorHttpClient()))
 
     val logger: Logger = Logger(Main::class.java)
-    val applicationService: ApplicationService = ApplicationService()
+    val applicationService: ApplicationService = ApplicationService(storagePath)
 
     @JvmStatic
     fun main(args: Array<String>) {
