@@ -21,7 +21,8 @@ import kotlinx.coroutines.runBlocking
 import java.util.UUID
 
 object Main {
-    val storage: Store = FileStore("./storage/")
+    val storagePath = System.getenv("STORAGE_PATH") ?: "./storage"
+    val storage: Store = FileStore(storagePath)
     val sessions: KtorSessionRepository = KtorSessionRepository(storage)
     val oAuthService = OAuthService(
         Configuration(
@@ -29,7 +30,8 @@ object Main {
                 ?: throw IllegalStateException("GDZIE JEST MOTHERSHIP_GOOGLE_CLIENT_ID"),
             clientSecret = System.getenv("MOTHERSHIP_GOOGLE_CLIENT_SECRET")
                 ?: throw IllegalStateException("GDZIE JEST MOTHERSHIP_GOOGLE_CLIENT_SECRET"),
-            redirectUrl = "http://localhost:8080/oauth/handle"
+            redirectUrl = System.getenv("BASE_URL")?.let { "$it/oauth/handle" }
+                ?: throw IllegalStateException("GDZIE JEST BASE_URL"),
         ),
         OAuthClient(KtorHttpClient())
     )

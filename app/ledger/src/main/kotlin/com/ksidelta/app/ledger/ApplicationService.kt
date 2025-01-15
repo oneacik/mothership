@@ -23,14 +23,14 @@ import java.time.LocalDate
 import java.time.temporal.ChronoField
 import java.util.UUID
 
-class ApplicationService {
+class ApplicationService(val storagePath: String) {
     private val mt940Reader = Mt940Reader.createForBNPParibas()
     private val driveService: DriveService = DriveService(DriveClient(KtorHttpClient()))
 
-    private val debugStorage: Cache = StoreCache(FileStore("./storage/debug/"), 60)
-    private val cache: Cache = StoreCache(FileStore("./storage/cache/"), 3600)
+    private val debugStorage: Cache = StoreCache(FileStore("${storagePath}/debug/"), 60)
+    private val cache: Cache = StoreCache(FileStore("${storagePath}/cache/"), 3600)
     private val memoize: Memoize = StoreMemoize(cache);
-    private val eternalCache: Cache = StoreCache(FileStore("./storage/cache/eternal/"), 30 * 24 * 60 * 60)
+    private val eternalCache: Cache = StoreCache(FileStore("${storagePath}/cache/eternal/"), 30 * 24 * 60 * 60)
     private val eternalMemoize: Memoize = StoreMemoize(eternalCache);
 
     private val logger: Logger = Logger(Main::class.java)
