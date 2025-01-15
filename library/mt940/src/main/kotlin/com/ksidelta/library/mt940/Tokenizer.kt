@@ -1,5 +1,7 @@
 package com.ksidelta.library.mt940
 
+import kotlin.text.Regex
+
 class Tokenizer(
     schema: List<TokenSchema> = listOf(
         TokenSchema(":20:", "1"),
@@ -74,7 +76,8 @@ class Tokenizer(
 
     internal fun matchToken(contents: String): Pair<Token, String> {
         val matchingSchema = schema.find { tokenSchema -> tokenSchema.regex.find(contents) != null }
-        if (matchingSchema == null) throw IllegalStateException("Not Found Match for line: ${contents.lines().first()}")
+        if (matchingSchema == null)
+            throw IllegalStateException("Not Found Match for line: \"${contents.lines().first()}\"")
 
         val matched = Token(matchingSchema.prefix, matchingSchema.regex.find(contents)!!.groups[1]!!.value)
         val rest = matchingSchema.regex.replace(contents, "")
@@ -85,7 +88,7 @@ class Tokenizer(
     data class Token(val prefix: String, val content: String)
     internal data class RegexTokenSchema(val prefix: String, val regex: Regex)
 
-    fun String.lineIs(equalTo: String) = this.lines()[0] == equalTo
-    fun String.stripLine() = this.replace(this.lines()[0], "").replace(Regex("""^[\r\n]{1,2}"""),"")
+    fun String.lineIs(equalTo: String) = (Regex("""^${equalTo}[\r\n]{1,2}""")).containsMatchIn(this)
+    fun String.stripLine() = this.replace(this.lines()[0], "").replace(Regex("""^[\r\n]{1,2}"""), "")
 
 }

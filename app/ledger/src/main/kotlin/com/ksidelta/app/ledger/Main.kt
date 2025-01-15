@@ -131,7 +131,7 @@ object Main {
                                                             """
                                                                 <html>
                                                                 <body>
-                                                                    <a href="/ledger/shared/${user.email}/">Shared Path</a> 
+                                                                    <a href="/ledger/shared/?email=${user.email}">Shared Path</a> 
                                                                 </body>
                                                                 </html>
                                                             """.trimIndent(),

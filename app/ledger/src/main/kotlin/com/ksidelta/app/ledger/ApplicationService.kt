@@ -33,7 +33,7 @@ class ApplicationService(val storagePath: String) {
     private val eternalCache: Cache = StoreCache(FileStore("${storagePath}/cache/eternal/"), 30 * 24 * 60 * 60)
     private val eternalMemoize: Memoize = StoreMemoize(eternalCache);
 
-    private val logger: Logger = Logger(Main::class.java)
+    private val logger: Logger = Logger(ApplicationService::class.java)
 
     fun calculateLedgerForWholeOrganisation(token: OAuthService.StoredToken, query: Map<String, String>) =
         downloadAllFilesFromGoogleDrive(token.accessToken)
