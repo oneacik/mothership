@@ -7,6 +7,7 @@ RUN gradle --no-daemon shadowJar
 
 FROM amd64/eclipse-temurin:21-jre AS mothership
 ARG project="ledger"
+EXPOSE 8080
 
 ENV STORAGE_PATH=/storage
 RUN mkdir /storage/
