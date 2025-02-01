@@ -29,3 +29,9 @@ tasks.test {
 kotlin {
     jvmToolchain(21)
 }
+
+tasks.named("shadowJar", com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar::class) {
+    manifest {
+        attributes(mapOf(Pair("Main-Class", "com.ksidelta.app.ledger.Main")))
+    }
+}
