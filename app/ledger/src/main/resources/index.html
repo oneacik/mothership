@@ -5,21 +5,20 @@
     <title>LEDGER 2000</title>
 </head>
 <body>
-<h1>WIELKI KRADZIEJ DANYCH MT940 Z DYSKU GOOGLE</h1>
+<h1>WIELKI SYSTEM WYCIĄGÓW MT940 Z DYSKU GOOGLE</h1>
 
 <p><b>Dla Zarządu - zobacz kto składki niet</b></p>
 
 <form action="/ledger/">
-    <label>Wyjeb imiona:</label><input type="checkbox" name="anonimized" value="true"><br/>
-    <label>Krótki Gołąb?:</label><input type="checkbox" name="short" value="true"><br/>
-    <label>Tylko Fajne Hajsy?:</label><input type="checkbox" name="contributions" value="true"><br/>
+    <label>Zanonimizuj:</label><input type="checkbox" name="anonimized" value="true"><br/>
+    <label>Grupuj Po nazwie Kontrahenta:</label><input type="checkbox" name="short" value="true"><br/>
+    <label>Pokaż tylko składki?:</label><input type="checkbox" name="contributions" value="true"><br/>
     <label>Miesięcy w tył:</label><input type="number" name="since" value=12><br/>
 
-    <button type="submit">ZAPIERDOL</button>
+    <button type="submit">Zdeleguj</button>
 </form>
 
-<a href="/ledger/shared/share">Kliknij tutaj by udostępnić klucz dla plebsu.</a>
-
+<a href="/ledger/shared/share">Kliknij tutaj by udostępnić klucz dla reszty członków</a>
 
 <p><b>Dla reszty</b></p>
 
@@ -28,6 +27,7 @@
     <select name="email">
         $user
     </select><br/>
+    <label>Zanonimizuj:</label><input type="checkbox" name="anonimized" value="true" disabled><br/>
     <label>Grupuj tylko po nazwie kontrahenta:</label><input type="checkbox" name="short" value="true"><br/>
     <label>Pokaż tylko składki?:</label><input type="checkbox" name="contributions" value="true"><br/>
     <label>Miesięcy w tył:</label><input type="number" name="since" value=12><br/>
