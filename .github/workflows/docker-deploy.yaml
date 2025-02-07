@@ -2,7 +2,7 @@ name: Create and publish a Docker image
 
 on:
   push:
-    tags: ['*.*.*']
+    tags: [ '*.*.*' ]
 
 # Defines two custom environment variables for the workflow. These are used for the Container registry domain, and a name for the Docker image that this workflow builds.
 env:
@@ -13,7 +13,10 @@ jobs:
   build-and-push-image:
     strategy:
       matrix:
-        app_name: ["libruch", "ledger"]
+        app_name:
+          - libruch
+          - ledger
+    name: "${{matrix.app_name}}: Docker Build & Push"
     runs-on: ubuntu-latest
     env:
       IMAGE_NAME: oneacik/${{matrix.app_name}}
@@ -36,7 +39,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@9ec57ed1fcdbf14dcef7dfbe97b2010124a938b7
         with:
-          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          images: ${{github.repository}}-${{ env.IMAGE_NAME }}
       - name: Build and push Docker image
         id: push
         uses: docker/build-push-action@f2a1d5e99d037542a71f64918e516c093c6f3fc4
