@@ -24,17 +24,20 @@ import io.ktor.util.toMap
 import kotlinx.coroutines.runBlocking
 
 object Main {
+    val storagePath = System.getenv("STORAGE_PATH") ?: "./storage"
+    val baseUrl = System.getenv("BASE_URL") ?: "http://localhost"
+
     val booksClient: GoogleBookClient = GoogleBookClient.unauthenticated()
     val logger: Logger = Logger(Main::class.java)
-    val bookStorage: Store = FileStore("./storage/books/")
-    val stateStorage: Store = FileStore("./storage/state/")
+    val bookStorage: Store = FileStore("${storagePath}/books/")
+    val stateStorage: Store = FileStore("${storagePath}/state/")
     val oAuthService = OAuthService(
         Configuration(
             clientId = System.getenv("MOTHERSHIP_GOOGLE_CLIENT_ID")
                 ?: throw IllegalStateException("GDZIE JEST MOTHERSHIP_GOOGLE_CLIENT_ID"),
             clientSecret = System.getenv("MOTHERSHIP_GOOGLE_CLIENT_SECRET")
                 ?: throw IllegalStateException("GDZIE JEST MOTHERSHIP_GOOGLE_CLIENT_SECRET"),
-            redirectUrl = "http://localhost".let { "$it/api/auth/handle" }
+            redirectUrl = baseUrl.let { "$it/api/auth/handle" }
         ),
         OAuthClient(KtorHttpClient())
     )
