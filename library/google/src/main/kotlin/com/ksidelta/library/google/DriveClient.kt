@@ -1,7 +1,7 @@
 package com.ksidelta.library.google
 
 import com.ksidelta.library.http.HttpClient
-import com.ksidelta.library.utils.UrlBuilder
+import com.ksidelta.library.books.UrlBuilder
 
 class DriveClient(val httpClient: HttpClient) {
     fun listFiles(token: String, criteria: Criteria): List<DriveFileListDTO> =

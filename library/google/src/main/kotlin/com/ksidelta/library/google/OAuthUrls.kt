@@ -1,6 +1,6 @@
 package com.ksidelta.library.google
 
-import com.ksidelta.library.utils.UrlBuilder
+import com.ksidelta.library.books.UrlBuilder
 
 object OAuthUrls {
     fun authorize(
@@ -16,7 +16,7 @@ object OAuthUrls {
 
                 "client_id" to clientId,
 
-                "scope" to "openid email profile https://www.googleapis.com/auth/drive",
+                "scope" to "openid email profile https://www.googleapis.com/auth/drive https://www.googleapis.com/auth/spreadsheets" ,
                 "state" to "redirectTo:${originalUrl}",
                 "redirect_uri" to redirectUrl,
                 "access_type" to if (offline) "offline" else "online",

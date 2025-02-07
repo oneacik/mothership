@@ -1,7 +1,7 @@
 package com.ksidelta.library.google
 
 import com.ksidelta.library.http.HttpClient
-import com.ksidelta.library.utils.UrlBuilder
+import com.ksidelta.library.books.UrlBuilder
 
 class ProfileClient(val httpClient: HttpClient) {
     fun me(token: String) =

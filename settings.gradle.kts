@@ -22,5 +22,7 @@ include(":library:banking")
 include(":library:table")
 include(":library:session")
 include(":library:cache")
+include(":library:books")
 
 include(":app:ledger")
+include(":app:libruch")

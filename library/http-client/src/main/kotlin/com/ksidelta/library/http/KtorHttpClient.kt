@@ -8,7 +8,9 @@ import io.ktor.client.engine.cio.CIO
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.request.get
 import io.ktor.client.request.post
+import io.ktor.client.request.setBody
 import io.ktor.client.statement.HttpResponse
+import io.ktor.http.HttpStatusCode
 import io.ktor.serialization.jackson.jackson
 import io.ktor.util.reflect.TypeInfo
 import kotlinx.coroutines.runBlocking
@@ -41,6 +43,7 @@ class KtorHttpClient : HttpClient {
                 configure(DTO()).headers.entries.forEach { header ->
                     this.headers.append(header.key, header.value)
                 }
+                configure(DTO()).body?.let { setBody(it) }
             }.handleResponse(klass)
         }
 
@@ -49,6 +52,10 @@ class KtorHttpClient : HttpClient {
             .apply { logger.log("Response Status: {}", status) }
             .let { response ->
                 runCatching {
+                    if (response.status.value >= 400) {
+                        logger.log(response.body<String>())
+                    }
+
                     response.body<T>(TypeInfo(klass.kotlin, null))
                 }.onFailure {
                     logger.log(response.body<String>())

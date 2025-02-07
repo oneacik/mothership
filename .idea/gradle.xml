@@ -12,8 +12,10 @@
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/app" />
             <option value="$PROJECT_DIR$/app/ledger" />
+            <option value="$PROJECT_DIR$/app/libruch" />
             <option value="$PROJECT_DIR$/library" />
             <option value="$PROJECT_DIR$/library/banking" />
+            <option value="$PROJECT_DIR$/library/books" />
             <option value="$PROJECT_DIR$/library/cache" />
             <option value="$PROJECT_DIR$/library/google" />
             <option value="$PROJECT_DIR$/library/http-client" />
@@ -37,8 +39,10 @@
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/app" />
             <option value="$PROJECT_DIR$/app/ledger" />
+            <option value="$PROJECT_DIR$/app/libruch" />
             <option value="$PROJECT_DIR$/library" />
             <option value="$PROJECT_DIR$/library/banking" />
+            <option value="$PROJECT_DIR$/library/books" />
             <option value="$PROJECT_DIR$/library/cache" />
             <option value="$PROJECT_DIR$/library/google" />
             <option value="$PROJECT_DIR$/library/http-client" />
