@@ -27,7 +27,7 @@ class KtorHttpClient : HttpClient {
         }
     }
 
-    override fun <T : Any> get(url: String, klass: Class<T>, configure: (DTO) -> DTO): T =
+    override fun <T : Any> get(url: String, klass: Class<T>, configure: (DTO) -> DTO): HttpClient.Response<T> =
         runBlocking {
             client.get(url) {
                 configure(DTO()).headers.entries.forEach { header ->
@@ -37,7 +37,7 @@ class KtorHttpClient : HttpClient {
         }
 
 
-    override fun <T : Any> post(url: String, klass: Class<T>, configure: (DTO) -> DTO): T =
+    override fun <T : Any> post(url: String, klass: Class<T>, configure: (DTO) -> DTO): HttpClient.Response<T> =
         runBlocking {
             client.post(url) {
                 configure(DTO()).headers.entries.forEach { header ->
@@ -47,7 +47,7 @@ class KtorHttpClient : HttpClient {
             }.handleResponse(klass)
         }
 
-    private suspend fun <T : Any> HttpResponse.handleResponse(klass: Class<T>): T =
+    private suspend fun <T : Any> HttpResponse.handleResponse(klass: Class<T>): HttpClient.Response<T> =
         this
             .apply { logger.log("Response Status: {}", status) }
             .let { response ->
@@ -56,7 +56,10 @@ class KtorHttpClient : HttpClient {
                         logger.log(response.body<String>())
                     }
 
-                    response.body<T>(TypeInfo(klass.kotlin, null))
+                    HttpClient.Response(
+                        response.body<T>(TypeInfo(klass.kotlin, null)),
+                        response.status.value
+                    )
                 }.onFailure {
                     logger.log(response.body<String>())
                 }.getOrThrow()

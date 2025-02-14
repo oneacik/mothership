@@ -11,9 +11,9 @@ class SpreadsheetClient(val httpClient: HttpClient) {
         UrlBuilder.queryUrl("https://sheets.googleapis.com/v4/spreadsheets", mapOf()).let { url ->
             httpClient.post(url, NewSpreadsheetResponse::class.java) {
                 it
-                    .setToken(token)
+                    .bearer(token)
                     .body(NewSpreadsheet(NewSpreadsheet.Properties(title)))
-            }
+            }.data
         }
 
     data class NewSpreadsheet(val properties: Properties) {
@@ -35,7 +35,7 @@ class SpreadsheetClient(val httpClient: HttpClient) {
                         )
                     )
                 )
-            ).setToken(token)
+            ).bearer(token)
         }
     }
 
@@ -53,7 +53,7 @@ class SpreadsheetClient(val httpClient: HttpClient) {
     fun updateValues(token: String, spreadsheetId: SpreadsheetId, range: String, values: List<List<String>>) {
         val url = "https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values:batchUpdate"
         httpClient.post(url, String::class.java) {
-            it.setToken(token)
+            it.bearer(token)
                 .body(
                     SheetBatchUpdate(
                         SheetBatchUpdate.ValueInputOption.USER_ENTERED,

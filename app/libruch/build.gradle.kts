@@ -7,6 +7,7 @@ group = "com.ksidelta"
 
 dependencies {
     implementation(project(":library:store"))
+    implementation(project(":library:cache"))
     implementation(project(":library:books"))
     implementation(project(":library:http-client"))
     implementation(project(":library:serialization"))

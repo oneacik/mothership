@@ -11,7 +11,8 @@ class ProfileClient(val httpClient: HttpClient) {
                 )
             ),
             UserInfo::class.java
-        ) { it.setToken(token) }
+        ) { it.bearer(token) }
+            .data
 
     data class UserInfo(
         val sub: String,

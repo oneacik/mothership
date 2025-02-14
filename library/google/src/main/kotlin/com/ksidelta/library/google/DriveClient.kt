@@ -23,7 +23,7 @@ class DriveClient(val httpClient: HttpClient) {
                         + (criteria.contains?.let { mapOf("q" to """name contains "$it" """) } ?: mapOf())
                         + (pageToken?.let { mapOf("pageToken" to it) } ?: mapOf())
             ), DriveFileListDTO::class.java
-        )
+        ).data
 
     fun downloadFile(token: String, fileId: String): ByteArray = httpClient.get(
         UrlBuilder.queryUrl(
@@ -32,7 +32,8 @@ class DriveClient(val httpClient: HttpClient) {
                 "supportsAllDrives" to "true",
             )
         ), ByteArray::class.java
-    ) { headers -> headers.setToken(token) }
+    ) { headers -> headers.bearer(token) }
+        .data
 
     data class DriveFileListDTO(
         val nextPageToken: String?,

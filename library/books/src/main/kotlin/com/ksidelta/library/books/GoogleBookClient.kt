@@ -6,7 +6,7 @@ import com.ksidelta.library.http.KtorHttpClient
 class GoogleBookClient private constructor(val httpClient: HttpClient) : BookClient {
 
     override fun fetchByIsbn(isbn: String): BookClient.Book? {
-        val response = httpClient.get("https://www.googleapis.com/books/v1/volumes?q=isbn:${isbn}", GoogleBookResponseDto::class.java)
+        val response = httpClient.get("https://www.googleapis.com/books/v1/volumes?q=isbn:${isbn}", GoogleBookResponseDto::class.java).data
         if (response.totalItems.equals(0))
             return null;
 
@@ -15,7 +15,7 @@ class GoogleBookClient private constructor(val httpClient: HttpClient) : BookCli
             isbn,
             fetchedVolume.title,
             fetchedVolume.authors.joinToString(", "),
-            fetchedVolume.publishedDate
+            fetchedVolume.publishedDate.substring(0, 4)
         );
     }
 

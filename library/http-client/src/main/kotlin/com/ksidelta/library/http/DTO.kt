@@ -7,6 +7,7 @@ data class DTO(
     val body: Any? = null
 ) {
     fun body(content: Any) = copy(headers + mapOf("Content-Type" to "application/json"), content)
-    fun setToken(token: String) = copy(headers + mapOf("Authorization" to "Bearer $token"))
+    fun bearer(token: String) = copy(headers + mapOf("Authorization" to "Bearer $token"))
+    fun authorize(token: String) = copy(headers + mapOf("Authorization" to token))
 }
 

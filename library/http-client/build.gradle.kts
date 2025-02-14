@@ -9,6 +9,7 @@ dependencies {
     testImplementation(kotlin("test"))
     implementation(kotlin("reflect"))
     implementation(project(":library:logger"))
+    implementation(project(":library:store"))
 
     implementation("io.ktor:ktor-client-core:${rootProject.ext.get("ktor.version")}")
     implementation("io.ktor:ktor-client-cio:${rootProject.ext.get("ktor.version")}")

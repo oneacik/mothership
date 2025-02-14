@@ -20,6 +20,7 @@ class OAuthClient(val client: HttpClient) {
                 }
             }
             .let { client.post(it, TokenResponse::class.java) }
+            .data
 
     fun refreshToken(configuration: Configuration, refreshToken: String) =
         client.post(
@@ -33,6 +34,7 @@ class OAuthClient(val client: HttpClient) {
             ),
             TokenResponse::class.java
         )
+            .data
 
 
     data class TokenResponse(

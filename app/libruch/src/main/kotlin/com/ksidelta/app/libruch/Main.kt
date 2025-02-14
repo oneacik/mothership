@@ -2,12 +2,15 @@ package com.ksidelta.app.libruch
 
 import com.ksidelta.library.books.BookClient
 import com.ksidelta.library.books.GoogleBookClient
+import com.ksidelta.library.books.IsbndbClient
+import com.ksidelta.library.cache.passthrough
 import com.ksidelta.library.email.EmailService
 import com.ksidelta.library.email.SendGridEmailService
 import com.ksidelta.library.google.Configuration
 import com.ksidelta.library.google.OAuthClient
 import com.ksidelta.library.google.OAuthService
 import com.ksidelta.library.google.SpreadsheetClient
+import com.ksidelta.library.http.HttpClient
 import com.ksidelta.library.http.KtorHttpClient
 import com.ksidelta.library.logger.Logger
 import com.ksidelta.library.session.KtorSessionRepository
@@ -29,9 +32,11 @@ import kotlinx.coroutines.runBlocking
 object Main {
     val storagePath = System.getenv("STORAGE_PATH") ?: "./storage"
     val baseUrl = System.getenv("BASE_URL") ?: "http://localhost"
+    val isbndbKey = System.getenv("MOTHERSHIP_ISBNDB_APIKEY") ?: throw IllegalStateException("GDZIE JEST MOTHERSHIP_ISBNDB_APIKEY")
 
-    val booksClient: GoogleBookClient = GoogleBookClient.unauthenticated()
+    val booksClient: BookClient = IsbndbClient(KtorHttpClient(), isbndbKey)
     val logger: Logger = Logger(Main::class.java)
+    val isbnCache: Store = FileStore("${storagePath}/cache/isbns")
     val bookStorage: Store = FileStore("${storagePath}/books/")
     val stateStorage: Store = FileStore("${storagePath}/state/")
     val authenticationStorage: Store = FileStore("${storagePath}/state/")
@@ -144,7 +149,7 @@ object Main {
                                 val email = session.email
                                 val isbn = call.parameters["isbn"]!!
 
-                                booksClient.fetchByIsbn(isbn)
+                                isbnCache.passthrough(isbn) { booksClient.fetchByIsbn(isbn) }
                                     ?.let {
                                         bookStorage.store("${email}#${isbn}", it)
                                             .also { call.respond(HttpStatusCode.OK) }
@@ -156,10 +161,10 @@ object Main {
 
                     route("/books") {
                         get("/{isbn}") {
-                            booksClient.fetchByIsbn(call.parameters["isbn"]!!)
+                            val isbn = call.parameters["isbn"]!!
+                            isbnCache.passthrough(isbn) { booksClient.fetchByIsbn(isbn) }
                                 ?.let { call.respond(it) }
                                 ?: call.respondText("Book Not Found", status = HttpStatusCode.NotFound)
-
                         }
                     }
                 }
