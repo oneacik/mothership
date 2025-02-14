@@ -15,14 +15,16 @@ class IsbndbClient(val httpClient: HttpClient, val apiKey: String) : BookClient 
                         BookClient.Book(
                             isbn = isbn,
                             title = title,
-                            author = authors.joinToString(", "),
-                            year = date_published.substring(0, 4),
+                            author = authors?.joinToString(", ") ?: "????",
+                            year = date_published?.substring(0, 4) ?: "????",
                         )
                     }
                 }
-        }.getOrNull()
+        }
+            .onFailure { it.printStackTrace() }
+            .getOrNull()
 
     data class IsbndbBookResponseDto(val book: Book) {
-        data class Book(val title: String, val publisher: String, val date_published: String, val authors: List<String>) {}
+        data class Book(val title: String, val publisher: String?, val date_published: String?, val authors: List<String>?) {}
     }
 }

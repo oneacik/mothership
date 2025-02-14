@@ -15,4 +15,15 @@ class IsbndbClientTest {
             assertEquals("2021", year)
         }
     }
+
+
+    @Test
+    fun sendMail2() {
+        val service = IsbndbClient(KtorHttpClient(), System.getenv("MOTHERSHIP_ISBNDB_APIKEY") ?: throw IllegalStateException("WHERE KEY"))
+        requireNotNull(service.fetchByIsbn("9788381884105")).apply {
+            assertEquals("Kroniki Diuny. Tom 1. Diuna", title)
+            assertEquals("????", author)
+            assertEquals("????", year)
+        }
+    }
 }
