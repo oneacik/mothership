@@ -6,4 +6,4 @@ interface Cache : Store {
 }
 
 inline fun <reified T> Store.passthrough(key: String, compute: () -> T?): T? =
-    this.get(key, T::class.java) ?: compute()?.also { this.store(key, this) }
+    this.get(key, T::class.java) ?: compute()?.also { value -> this.store(key, value) }
