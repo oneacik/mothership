@@ -2,12 +2,15 @@ package com.ksidelta.app.libruch
 
 import com.ksidelta.library.books.BookClient
 import com.ksidelta.library.books.GoogleBookClient
+import com.ksidelta.library.email.EmailService
+import com.ksidelta.library.email.SendGridEmailService
 import com.ksidelta.library.google.Configuration
 import com.ksidelta.library.google.OAuthClient
 import com.ksidelta.library.google.OAuthService
 import com.ksidelta.library.google.SpreadsheetClient
 import com.ksidelta.library.http.KtorHttpClient
 import com.ksidelta.library.logger.Logger
+import com.ksidelta.library.session.KtorSessionRepository
 import com.ksidelta.library.store.FileStore
 import com.ksidelta.library.store.Store
 import io.ktor.http.HttpStatusCode
@@ -31,6 +34,8 @@ object Main {
     val logger: Logger = Logger(Main::class.java)
     val bookStorage: Store = FileStore("${storagePath}/books/")
     val stateStorage: Store = FileStore("${storagePath}/state/")
+    val authenticationStorage: Store = FileStore("${storagePath}/state/")
+    val sessions: KtorSessionRepository = KtorSessionRepository(FileStore("${storagePath}/sessions/"))
     val oAuthService = OAuthService(
         Configuration(
             clientId = System.getenv("MOTHERSHIP_GOOGLE_CLIENT_ID")
@@ -42,12 +47,20 @@ object Main {
         OAuthClient(KtorHttpClient())
     )
     val spreadsheetClient: SpreadsheetClient = SpreadsheetClient(KtorHttpClient())
+    val emailService: EmailService = SendGridEmailService(
+        System.getenv("MOTHERSHIP_SENDGRID_APIKEY")
+            ?: throw IllegalStateException("GDZIE JEST SENDGRID")
+    );
+
 
     val bookService: BooksService = BooksService(
         stateStorage,
         bookStorage,
+        authenticationStorage,
         oAuthService,
-        spreadsheetClient
+        spreadsheetClient,
+        emailService,
+        baseUrl
     )
 
     @JvmStatic
@@ -63,6 +76,26 @@ object Main {
                         stateStorage.get("spreadsheet", SpreadsheetClient.NewSpreadsheetResponse::class.java)
                             ?.let { call.respondRedirect(it.spreadsheetUrl, permanent = false) }
                             ?: call.respond(HttpStatusCode.NotFound, "Service is not initiated yet")
+                    }
+
+                    route("/login") {
+                        post("/challenge/{email}") {
+                            val email = call.pathParameters["email"]!!
+                            bookService.createLogin(email)
+                            call.respond("OK")
+                        }
+                        get("/{challenge}") {
+                            val challenge = call.pathParameters["challenge"]!!
+                            bookService.login(challenge)?.let { email ->
+                                sessions.fetch(call).store(AuthenticatedEmail::class.java, AuthenticatedEmail(email))
+                                call.respondRedirect("/app")
+                            } ?: call.respond(HttpStatusCode.BadRequest, "Challenge Failed")
+                        }
+                        get("/email") {
+                            sessions.fetch(call).fetch(AuthenticatedEmail::class.java)?.let {
+                                call.respond(HttpStatusCode.OK, it.email)
+                            } ?: call.respond(HttpStatusCode.Unauthorized)
+                        }
                     }
 
                     route("/auth") {
@@ -85,14 +118,6 @@ object Main {
                                     .also { token -> token?.let { stateStorage.store("token", it) } }
                                     .let { token ->
                                         spreadsheetClient.create(token!!.accessToken).also {
-                                            // spreadsheetClient.createSheet(token.accessToken, it.spreadsheetId, "JAJEC", 1)
-                                            // spreadsheetClient.updateValues(
-                                            //     token!!.accessToken, it.spreadsheetId, "A1:B3", listOf(
-                                            //         listOf("N", "I"),
-                                            //         listOf("G", "G"),
-                                            //         listOf("E", "R")
-                                            //     )
-                                            // )
                                             stateStorage.store("spreadsheet", it)
                                             bookService.sync()
                                         }
@@ -104,17 +129,19 @@ object Main {
 
 
                     route("/library") {
-                        route("/{email}") {
-                            get("/") {
-                                val email = call.parameters["email"]!!
-
+                        get("/") {
+                            val session = sessions.fetch(call).fetch(AuthenticatedEmail::class.java)
+                            session?.email?.let { email ->
                                 bookStorage.keys().filter { it.startsWith(email) }
                                     .map { bookStorage.get(it, BookClient.Book::class.java) }
                                     .let { call.respond(mapOf("books" to it)) }
-                            }
+                            } ?: call.respond(HttpStatusCode.Unauthorized)
+                        }
 
-                            put("/{isbn}") {
-                                val email = call.parameters["email"]!!
+                        put("/{isbn}") {
+                            val session = sessions.fetch(call).fetch(AuthenticatedEmail::class.java)
+                            session?.email?.let { email ->
+                                val email = session.email
                                 val isbn = call.parameters["isbn"]!!
 
                                 booksClient.fetchByIsbn(isbn)
@@ -123,7 +150,7 @@ object Main {
                                             .also { call.respond(HttpStatusCode.OK) }
                                     }
                                     ?: call.respondText("Book Not Found", status = HttpStatusCode.NotFound)
-                            }
+                            } ?: call.respond(HttpStatusCode.Unauthorized)
                         }
                     }
 
@@ -154,5 +181,7 @@ object Main {
             }
     }
 }
+
+data class AuthenticatedEmail(val email: String)
 
 // infix fun <T, U> T.`*`(func: (T) -> U): U = func(this)

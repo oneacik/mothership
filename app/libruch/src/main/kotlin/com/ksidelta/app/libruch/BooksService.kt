@@ -1,17 +1,22 @@
 package com.ksidelta.app.libruch
 
 import com.ksidelta.library.books.BookClient
+import com.ksidelta.library.email.EmailService
 import com.ksidelta.library.google.OAuthService
 import com.ksidelta.library.google.SpreadsheetClient
 import com.ksidelta.library.store.Store
+import java.util.UUID
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
 
 class BooksService(
     val stateStorage: Store,
     val bookStorage: Store,
+    val authenticationStorage: Store,
     val oAuthService: OAuthService,
-    val spreadsheetClient: SpreadsheetClient
+    val spreadsheetClient: SpreadsheetClient,
+    val emailService: EmailService,
+    val baseUrl: String,
 ) {
     val SPLITTER: String = "#"
 
@@ -59,4 +64,23 @@ class BooksService(
     }
 
     data class BookWithOwner(val owner: String, val book: BookClient.Book)
+
+    fun createLogin(forEmail: String) {
+        val uuid = UUID.randomUUID()
+        authenticationStorage.store(uuid.toString(), Authentication(forEmail))
+        emailService.sendHTML(
+            "no-reply@libruch.hsp.sh", forEmail, "Login Link", """
+            <html>
+                <body>
+                    Click here to <a href="${baseUrl}/api/login/${uuid}">authenticate</a>.
+                </body>
+            </html>
+        """.trimIndent()
+        )
+    }
+
+    fun login(uuid: String): String? =
+        authenticationStorage.get(uuid, Authentication::class.java)?.email
+
+    data class Authentication(val email: String)
 }

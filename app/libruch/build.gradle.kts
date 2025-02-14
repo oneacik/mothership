@@ -12,7 +12,8 @@ dependencies {
     implementation(project(":library:serialization"))
     implementation(project(":library:google"))
     implementation(project(":library:logger"))
-
+    implementation(project(":library:email"))
+    implementation(project(":library:session"))
 
     implementation("io.ktor:ktor-server-content-negotiation:3.0.3")
     implementation("io.ktor:ktor-serialization-jackson:3.0.3")

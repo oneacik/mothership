@@ -17,6 +17,7 @@
             <option value="$PROJECT_DIR$/library/banking" />
             <option value="$PROJECT_DIR$/library/books" />
             <option value="$PROJECT_DIR$/library/cache" />
+            <option value="$PROJECT_DIR$/library/email" />
             <option value="$PROJECT_DIR$/library/google" />
             <option value="$PROJECT_DIR$/library/http-client" />
             <option value="$PROJECT_DIR$/library/logger" />
@@ -44,6 +45,7 @@
             <option value="$PROJECT_DIR$/library/banking" />
             <option value="$PROJECT_DIR$/library/books" />
             <option value="$PROJECT_DIR$/library/cache" />
+            <option value="$PROJECT_DIR$/library/email" />
             <option value="$PROJECT_DIR$/library/google" />
             <option value="$PROJECT_DIR$/library/http-client" />
             <option value="$PROJECT_DIR$/library/logger" />

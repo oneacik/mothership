@@ -51,12 +51,6 @@ object Main {
                         .let { HtmlFiles.createIndex(it) }
                         .also { call.respondText(it, ContentType.Text.Html) }
                 }
-                get("/cookie") {
-                    call.response.cookies.append("CRINGE", UUID.randomUUID().toString())
-                    call.respondRedirect("/cookie", false)
-                }
-
-
 
                 route("/oauth") {
                     get("/handle") {

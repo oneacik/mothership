@@ -23,6 +23,7 @@ include(":library:table")
 include(":library:session")
 include(":library:cache")
 include(":library:books")
+include(":library:email")
 
 include(":app:ledger")
 include(":app:libruch")
