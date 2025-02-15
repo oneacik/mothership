@@ -1,8 +1,11 @@
 package com.ksidelta.library.books
 
 import com.ksidelta.library.http.HttpClient
+import com.ksidelta.library.logger.Logger
 
 class IsbndbClient(val httpClient: HttpClient, val apiKey: String) : BookClient {
+    val logger = Logger(IsbndbClient::class.java)
+
     override fun fetchByIsbn(isbn: String): BookClient.Book? =
         runCatching {
             httpClient.get("https://api2.isbndb.com/book/${isbn}", IsbndbBookResponseDto::class.java) { it.authorize(apiKey) }
@@ -21,7 +24,7 @@ class IsbndbClient(val httpClient: HttpClient, val apiKey: String) : BookClient 
                     }
                 }
         }
-            .onFailure { it.printStackTrace() }
+            .onFailure { logger.log("IsbndbClient failed to fetch: ${it.message}") }
             .getOrNull()
 
     data class IsbndbBookResponseDto(val book: Book) {

@@ -27,7 +27,7 @@ class BooksService(
                     .onFailure { it.printStackTrace() }
             },
             0,
-            5, TimeUnit.SECONDS
+            100, TimeUnit.SECONDS
         )
     }
 

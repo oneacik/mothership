@@ -6,3 +6,15 @@ interface HttpClient {
 
     data class Response<T>(val data: T, val status: Int)
 }
+
+fun <T> HttpClient.fallbackExecute(executions: List<() -> HttpClient.Response<T>>): HttpClient.Response<T> {
+    var first: HttpClient.Response<T>? = null
+    for (execution in executions) {
+        var x = execution()
+        if (first == null) first = x
+        if (x.status == 200) return x;
+    }
+
+    return checkNotNull(first)
+}
+

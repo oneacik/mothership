@@ -1,6 +1,7 @@
 package com.ksidelta.app.libruch
 
 import com.ksidelta.library.books.BookClient
+import com.ksidelta.library.books.FallbackClient
 import com.ksidelta.library.books.GoogleBookClient
 import com.ksidelta.library.books.IsbndbClient
 import com.ksidelta.library.cache.passthrough
@@ -30,11 +31,18 @@ import io.ktor.util.toMap
 import kotlinx.coroutines.runBlocking
 
 object Main {
+
+    val PROD = System.getenv("MOTHERSHIP_PROD") != null
     val storagePath = System.getenv("STORAGE_PATH") ?: "./storage"
     val baseUrl = System.getenv("BASE_URL") ?: "http://localhost"
     val isbndbKey = System.getenv("MOTHERSHIP_ISBNDB_APIKEY") ?: throw IllegalStateException("GDZIE JEST MOTHERSHIP_ISBNDB_APIKEY")
 
-    val booksClient: BookClient = IsbndbClient(KtorHttpClient(), isbndbKey)
+    val booksClient: BookClient = FallbackClient(
+        listOf(
+            GoogleBookClient.unauthenticated(),
+            IsbndbClient(KtorHttpClient(), isbndbKey)
+        )
+    )
     val logger: Logger = Logger(Main::class.java)
     val isbnCache: Store = FileStore("${storagePath}/cache/isbns")
     val bookStorage: Store = FileStore("${storagePath}/books/")
@@ -100,6 +108,12 @@ object Main {
                             sessions.fetch(call).fetch(AuthenticatedEmail::class.java)?.let {
                                 call.respond(HttpStatusCode.OK, it.email)
                             } ?: call.respond(HttpStatusCode.Unauthorized)
+                        }
+                        if (!PROD) {
+                            get("/email/{email}") {
+                                val email = call.pathParameters["email"]!!
+                                sessions.fetch(call).store(AuthenticatedEmail::class.java, AuthenticatedEmail(email))
+                            }
                         }
                     }
 

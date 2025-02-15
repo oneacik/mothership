@@ -7,6 +7,7 @@ group = "com.ksidelta"
 
 dependencies {
     implementation(project(":library:http-client"))
+    implementation(project(":library:logger"))
     testImplementation(kotlin("test"))
 }
 
