@@ -15,6 +15,8 @@ dependencies {
     implementation("io.ktor:ktor-client-cio:${rootProject.ext.get("ktor.version")}")
     implementation("io.ktor:ktor-client-content-negotiation:${rootProject.ext.get("ktor.version")}")
     implementation("io.ktor:ktor-serialization-jackson:${rootProject.ext.get("ktor.version")}")
+    implementation("io.ktor:ktor-serialization-kotlinx-xml:${rootProject.ext.get("ktor.version")}")
+    implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-xml:2.18.1")
 }
 
 tasks.test {

@@ -15,6 +15,8 @@ import com.ksidelta.library.memoize.execute
 import com.ksidelta.library.mt940.Mt940Reader
 import com.ksidelta.library.store.FileStore
 import com.ksidelta.library.table.AsciiRenderer
+import com.ksidelta.library.table.HtmlRenderer
+import com.ksidelta.library.table.Renderer
 import com.ksidelta.library.table.Table
 import com.ksidelta.library.table.Table.Pos
 import java.math.BigDecimal
@@ -35,6 +37,8 @@ class ApplicationService(val storagePath: String) {
 
     private val logger: Logger = Logger(ApplicationService::class.java)
 
+    private val renderer: Renderer = HtmlRenderer()
+
     fun calculateLedgerForWholeOrganisation(token: OAuthService.StoredToken, query: Map<String, String>) =
         downloadAllFilesFromGoogleDrive(token.accessToken)
             .convertFilesToModel()
@@ -45,7 +49,7 @@ class ApplicationService(val storagePath: String) {
                 senderOnly = query["short"] == "true"
             )
             .toTable()
-            .render(AsciiRenderer())
+            .render(renderer)
 
 
     private fun downloadAllFilesFromGoogleDrive(token: String): List<Pair<String, String>> =

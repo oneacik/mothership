@@ -14,6 +14,8 @@ import io.ktor.http.ContentType
 import io.ktor.http.HttpStatusCode
 import io.ktor.server.engine.*
 import io.ktor.server.netty.*
+import io.ktor.server.request.location
+import io.ktor.server.request.uri
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import io.ktor.util.toMap
@@ -21,7 +23,7 @@ import kotlinx.coroutines.runBlocking
 import java.util.UUID
 
 object Main {
-    val storagePath = System.getenv("STORAGE_PATH") ?: "./storage"
+    val storagePath = System.getenv("STORAGE_PATH") ?: "./storage_ledger"
     val storage: Store = FileStore(storagePath)
     val sessions: KtorSessionRepository = KtorSessionRepository(storage)
     val oAuthService = OAuthService(
@@ -68,14 +70,14 @@ object Main {
                         handleErrors {
                             sessions.fetch(call)
                                 .fetch(OAuthService.StoredToken::class.java)
-                                .let { oAuthService.ensureFresh(it, call.redirectFun(), "/ledger/") }
+                                .let { oAuthService.ensureFresh(it, call.redirectFun(), call.request.uri) }
                                 ?.let { token ->
                                     applicationService.calculateLedgerForWholeOrganisation(token,
                                         call.parameters.entries()
                                             .map { (key, value) -> Pair(key, value.joinToString("")) }
                                             .toMap()
                                     )
-                                        .let { call.respondText(it) }
+                                        .let { call.respondText(it, ContentType.Text.Html) }
                                 } ?: call.respondRedirect("/oauth/init", false)
                         }
                     }
@@ -98,7 +100,7 @@ object Main {
                                             .toMap() + mapOf("anonimized" to "true")
                                     )
                                 }
-                                ?.let { output -> call.respondText(output) }
+                                ?.let { output -> call.respondText(output, ContentType.Text.Html) }
                                 ?: call.respondText("Gdzie token?", status = HttpStatusCode.Unauthorized)
 
                         }

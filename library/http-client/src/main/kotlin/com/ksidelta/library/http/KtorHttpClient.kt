@@ -1,7 +1,11 @@
 package com.ksidelta.library.http
 
 import com.fasterxml.jackson.core.JsonParser
+import com.fasterxml.jackson.core.StreamReadCapability
+import com.fasterxml.jackson.databind.DeserializationContext
 import com.fasterxml.jackson.databind.DeserializationFeature
+import com.fasterxml.jackson.dataformat.xml.XmlMapper
+import com.fasterxml.jackson.module.kotlin.registerKotlinModule
 import com.ksidelta.library.logger.Logger
 import io.ktor.client.call.body
 import io.ktor.client.engine.cio.CIO
@@ -10,9 +14,16 @@ import io.ktor.client.request.get
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
 import io.ktor.client.statement.HttpResponse
-import io.ktor.http.HttpStatusCode
+import io.ktor.http.ContentType
+import io.ktor.http.content.OutgoingContent
+import io.ktor.serialization.ContentConverter
+import io.ktor.serialization.jackson.JacksonConverter
 import io.ktor.serialization.jackson.jackson
+import io.ktor.serialization.kotlinx.serialization
+import io.ktor.serialization.kotlinx.xml.xml
 import io.ktor.util.reflect.TypeInfo
+import io.ktor.utils.io.ByteReadChannel
+import io.ktor.utils.io.charsets.Charset
 import kotlinx.coroutines.runBlocking
 
 class KtorHttpClient : HttpClient {
@@ -24,6 +35,13 @@ class KtorHttpClient : HttpClient {
                 jsonFactory.enable(JsonParser.Feature.INCLUDE_SOURCE_IN_LOCATION)
                 configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
             }
+
+            val xmlMapper = XmlMapper()
+                .registerKotlinModule()
+                .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
+
+            register(ContentType.Text.Xml, JacksonConverter(xmlMapper))
+            register(ContentType.Application.Xml, JacksonConverter(xmlMapper))
         }
     }
 
@@ -65,5 +83,15 @@ class KtorHttpClient : HttpClient {
                 }.getOrThrow()
             }
 
+
+    class XmlContentConverter : ContentConverter {
+        override suspend fun serialize(contentType: ContentType, charset: Charset, typeInfo: TypeInfo, value: Any?): OutgoingContent? {
+            TODO("Not yet implemented")
+        }
+
+        override suspend fun deserialize(charset: Charset, typeInfo: TypeInfo, content: ByteReadChannel): Any? {
+            TODO("Not yet implemented")
+        }
+    }
 }
 
