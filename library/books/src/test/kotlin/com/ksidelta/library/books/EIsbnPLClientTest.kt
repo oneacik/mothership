@@ -1,19 +1,27 @@
 package com.ksidelta.library.books
 
-import com.ksidelta.library.books.EIsbnPLClient
 import com.ksidelta.library.http.KtorHttpClient
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertNull
 
 class EIsbnPLClientTest {
 
     @Test
-    fun sendMail() {
+    fun testExistingBook() {
         val service = EIsbnPLClient(KtorHttpClient())
+
         requireNotNull(service.fetchByIsbn("9788381884105")).apply {
-            assertEquals("Doktryna jakosci", title)
-            assertEquals("Andrzej Jacek Blikle", author)
-            assertEquals("2021", year)
+            assertEquals("Kroniki Diuny", title)
+            assertEquals("Frank Herbert", author)
+            assertEquals("2022", year)
         }
+    }
+
+    @Test
+    fun testNonExistingBook() {
+        val service = EIsbnPLClient(KtorHttpClient())
+
+        assertNull(service.fetchByIsbn("9999999999999"))
     }
 }

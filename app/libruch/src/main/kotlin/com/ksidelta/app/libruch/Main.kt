@@ -1,6 +1,7 @@
 package com.ksidelta.app.libruch
 
 import com.ksidelta.library.books.BookClient
+import com.ksidelta.library.books.EIsbnPLClient
 import com.ksidelta.library.books.FallbackClient
 import com.ksidelta.library.books.GoogleBookClient
 import com.ksidelta.library.books.IsbndbClient
@@ -36,11 +37,12 @@ object Main {
     val storagePath = System.getenv("STORAGE_PATH") ?: "./storage"
     val baseUrl = System.getenv("BASE_URL") ?: "http://localhost"
     val isbndbKey = System.getenv("MOTHERSHIP_ISBNDB_APIKEY") ?: throw IllegalStateException("GDZIE JEST MOTHERSHIP_ISBNDB_APIKEY")
-
+    val ktorHttpClient = KtorHttpClient()
     val booksClient: BookClient = FallbackClient(
         listOf(
             GoogleBookClient.unauthenticated(),
-            IsbndbClient(KtorHttpClient(), isbndbKey)
+            EIsbnPLClient(ktorHttpClient),
+            IsbndbClient(ktorHttpClient, isbndbKey)
         )
     )
     val logger: Logger = Logger(Main::class.java)
