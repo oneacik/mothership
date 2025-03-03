@@ -115,6 +115,7 @@ object Main {
                             get("/email/{email}") {
                                 val email = call.pathParameters["email"]!!
                                 sessions.fetch(call).store(AuthenticatedEmail::class.java, AuthenticatedEmail(email))
+                                call.respond("OK!")
                             }
                         }
                     }
