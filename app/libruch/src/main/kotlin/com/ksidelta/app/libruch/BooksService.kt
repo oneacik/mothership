@@ -49,7 +49,7 @@ class BooksService(
                     .let { book ->
                         BookWithOwner(key.split("#")[0], requireNotNull(book))
                     }
-            }.sortedWith(compareBy({ it.owner }, { it.book.title }, { it.book.isbn }))
+            }.sortedWith(compareBy({ it.owner }, { it.book.author }, { it.book.title }, { it.book.isbn }))
 
         val listOfFields = books.map { bookWithOwner ->
             bookWithOwner.book.run { listOf(bookWithOwner.owner, title, author, year, isbn) }
