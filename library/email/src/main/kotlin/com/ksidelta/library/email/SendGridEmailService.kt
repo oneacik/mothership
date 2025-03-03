@@ -11,7 +11,13 @@ import java.util.Properties
 class SendGridEmailService(
     val apiKey: String
 ) : EmailService {
-    override fun sendHTML(from: String, to: String, subject: String, content: String) {
+    override fun sendHTML(
+        from: String,
+        to: String,
+        subject: String,
+        content: String,
+        userFriendlyFrom: String?
+        ) {
         val properties = Properties()
         properties.put("mail.host", "smtp.sendgrid.net")
         properties.put("mail.smtp.auth", "true")
@@ -32,7 +38,7 @@ class SendGridEmailService(
             )
         }
 
-        message.setFrom(from);
+        message.setFrom(InternetAddress(from, userFriendlyFrom ?: from));
 
         Transport.send(
             message,

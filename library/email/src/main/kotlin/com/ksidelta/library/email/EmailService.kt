@@ -5,6 +5,7 @@ interface EmailService {
         from: String,
         to: String,
         title: String,
-        content: String
+        content: String,
+        userFriendlyFrom: String?
     )
 }
