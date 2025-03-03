@@ -72,10 +72,10 @@ class BooksService(
             "no-reply@libruch.hsp.sh", forEmail, "Login Link", """
             <html>
                 <body>
-                    Click here to <a href="${baseUrl}/api/login/${uuid}">authenticate</a> to libruch app.
+                    Click here to <a href="${baseUrl}/api/login/${uuid}">authenticate</a> to libruch app.</br></br>
                     
-                    You can use this link to log in as many times as you like.
-                    Though, it is ok to resend it.
+                    You can use this link to log in as many times as you like.<br/>
+                    Though, it is ok to resend it from application.
                 </body>
             </html>
         """.trimIndent(), "Libruch"
